@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraint_layout"
+        android:layout_width="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="0dp">
+
+        <ImageView
+            android:id="@+id/image"
+            android:src="@drawable/game_board_5p"
+            android:layout_width="0dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="0dp">
+
+        </ImageView>
+        <View
+            android:id="@+id/view"
+            android:layout_width="4dp"
+            android:background="#000000"
+            android:layout_height="4dp"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+<EditText
+    android:id="@+id/angle"
+    android:hint="Sin/Cos"
+    android:layout_width="100dp"
+    android:layout_height="wrap_content"/>
+    <EditText
+        android:id="@+id/angleDegree"
+        android:hint="60/70"
+        app:layout_constraintTop_toBottomOf="@id/angle"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/reflect"
+        android:text="change"
+        app:layout_constraintStart_toEndOf="@id/angleDegree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
