@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
         constraintLayout = findViewById(R.id.constraint_layout);
 
         layoutParams = new ConstraintLayout.LayoutParams(
-                4,4);
+                8,8);
 
 
         location = new int[2];
@@ -95,28 +95,40 @@ public class MainActivity extends AppCompatActivity {
                 centerX =  boardLeft + imageWidth/2;
                 centerY =  boardTop + imageHeight/2;
 
+                System.out.println(centerX);
+                System.out.println(centerY);
 
-                perpendicular = imageHeight * (12.5410/100);
-                base = 2 * perpendicular * Math.tan(Math.toRadians(36));
+//                perpendicular = imageHeight * (12.97/100);
+//                base = (2 * perpendicular ) / Math.tan(Math.toRadians(54));
 
+                perpendicular = imageHeight * .1;
+                base =  (2 * perpendicular)/Math.tan(Math.toRadians(45));
 
                 cellWidth = base/3 ;
 
                 baseX = (int) (centerX - base/2);
                 baseY = (int) (centerY + perpendicular);
 
-                createView(baseX , baseY);
-
-
                 int key = 1;
-                        for(int i =0; i<3; i++) {
+                        for(int i =0; i<1; i++) {
 
                             int x = (int) (baseX + (cellWidth*i) + cellWidth/2);
 
-                            for(int j = 0; j<6;j++){
+                            for(int j = 0; j<1;j++){
 
                                 int y = (int) (baseY + (cellWidth*j) + cellWidth/2);
                                 storeInHashMap(key++,x,y);
+//                                findNextCoordinate(72,x,y);
+
+                                double radius = Math.sqrt(Math.pow(x-centerX,2) + Math.pow(y-centerY,2));
+
+                                System.out.println("Radius" + radius);
+
+                                int cell3X = (int) (radius * Math.sin(Math.toRadians(30)));
+                                int cell3Y = (int) (radius * Math.sin(Math.toRadians(30)));
+
+                                createView(x + cell3X, y + cell3Y);
+
                             }
                         }
 
@@ -156,9 +168,10 @@ public class MainActivity extends AppCompatActivity {
                             System.out.println("Cos" + degrees);
 
                         }
-
                         createView(cell_2_X, cell_2_Y);
 
+
+//                        findNextCoordinate(72,cell_2_X,cell_2_Y);
 //
 
                     }
@@ -168,8 +181,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void storeInHashMap(int key, int x, int y){
-
-        System.out.println("KEY:" + key + " X:"+ x + " Y:" + y);
 
         map.put(key,new int[]{x,y});
         createView(x,y);
@@ -184,11 +195,24 @@ public class MainActivity extends AppCompatActivity {
         View view = new View(this);
         view.setBackgroundColor(Color.DKGRAY);
         view.setLayoutParams(layoutParams);
-        view.setX(x);
-        view.setY(y);
+        view.setX(x-4);
+        view.setY(y-4);
 
         constraintLayout.addView(view);
         return view;
+    }
+
+    private void findNextCoordinate(int angle, int centerX, int centerY , int x1, int y1){
+
+      int anglePerSide = (180 - angle)/2;
+
+      double sideAB = Math.sqrt(Math.pow(x1-centerX,2) + Math.pow(y1-centerY,2));
+      double sideAC = sideAB;
+
+      double sideBC = 2*sideAB*Math.toRadians(Math.cos(anglePerSide));
+
+
+
     }
 
     private void showLog(String msg){

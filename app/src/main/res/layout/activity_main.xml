@@ -21,7 +21,7 @@
 
         <ImageView
             android:id="@+id/image"
-            android:src="@drawable/game_board_5p"
+            android:src="@drawable/game_board_4"
             android:layout_width="0dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
