@@ -2,7 +2,6 @@ package com.example.board5player;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,6 +14,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,13 +28,13 @@ public class MainActivity extends AppCompatActivity {
     int[] location;
     ConstraintLayout.LayoutParams layoutParams;
     private HashMap<Integer,int[]> map;
-    private EditText angle,degree;
-    private Button change;
     boolean called = false;
     private double base;
     private double perpendicular;
     private int centerY;
     private int centerX;
+    private double radius;
+    private int boardHeight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +42,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         imageView = findViewById(R.id.image);
-        view = findViewById(R.id.view);
+
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         int centerX = metrics.widthPixels;
         int centerY = metrics.heightPixels;
 
-        angle = findViewById(R.id.angle);
-        degree = findViewById(R.id.angleDegree);
-        change = findViewById(R.id.reflect);
+
 
         map = new HashMap<>();
         constraintLayout = findViewById(R.id.constraint_layout);
@@ -62,22 +61,13 @@ public class MainActivity extends AppCompatActivity {
 
         base();
 
-        change.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if(!angle.getText().toString().trim().isEmpty() && !degree.getText().toString().trim().isEmpty()){
-                    System.out.println(angle.getText().toString());
-                    System.out.println(degree.getText().toString());
-                    change();
-                }
-            }
-        });
     }
 
     int baseX = 0;
     int baseY = 0;
     double cellWidth = 0;
+    int originX;
+    int originY;
 
     private void base(){
 
@@ -87,48 +77,73 @@ public class MainActivity extends AppCompatActivity {
 
                 int imageHeight = imageView.getHeight();
                 int imageWidth = imageView.getWidth();
+                boardHeight = imageView.getWidth();
 
                 int boardTop = location[1];
                 int boardLeft = location[0];
 
 
-                centerX =  boardLeft + imageWidth/2;
-                centerY =  boardTop + imageHeight/2;
+                originX =  boardLeft + imageWidth/2;
+                originY =  boardTop + imageHeight/2;
 
-                System.out.println(centerX);
-                System.out.println(centerY);
+                int x = (int) (originX - getRadiusFromPercentage(boardHeight)*Math.sin(Math.toRadians(45)) + getCellWidth()/2);
+                int y = (int) (originY + getRadiusFromPercentage(boardHeight)*Math.cos(Math.toRadians(45)) + getCellWidth()/2);
 
-                createView(centerX,centerY);
+//                createView(x,y);
+                drawRedCoordinates(x,y);
 
-//                perpendicular = imageHeight * (12.97/100);
-//                base = (2 * perpendicular ) / Math.tan(Math.toRadians(54));
-
-                perpendicular = imageHeight * .1;
-                base =  (2 * perpendicular)/Math.tan(Math.toRadians(45));
-
-                cellWidth = base/3 ;
-
-                baseX = (int) (centerX - base/2);
-                baseY = (int) (centerY + perpendicular);
-
-                int x = (int) (baseX + cellWidth/2);
-                int y = (int) (baseY + cellWidth/2);
-
-                createView(x,y);
-                double radius = Math.sqrt(Math.pow(x-centerX,2) + Math.pow(y-centerY,2));
-
-                int cell3X = centerX + (int)(radius * Math.cos(Math.toRadians(30)));
-                int cell3Y = centerY + (int)(radius * Math.sin(Math.toRadians(30)));
-
-                int key = 1;
-                        for(int i =0; i<3; i++) {
-
-                            int y1 = (int) (cell3Y - (cellWidth*i));
-
-                            for(int j = 0; j<6;j++){
 //
-                                int x1 = (int) (cell3X + (cellWidth*j));
-                                storeInHashMap(key++,x1,y1);
+//                createView(centerX,centerY);
+//
+////                perpendicular = imageHeight * (12.97/100);
+////                base = (2 * perpendicular ) / Math.tan(Math.toRadians(54));
+//
+//                perpendicular = imageHeight * 12.54/100;
+//                base =  (2 * perpendicular) * Math.tan(Math.toRadians(36));
+//
+//                cellWidth = base/3 ;
+//
+//                baseX = (int) (centerX - base/2);
+//                baseY = (int) (centerY + perpendicular);
+//
+//                int x = (int) (baseX + cellWidth/2);
+//                int y = (int) (baseY + cellWidth/2);
+//
+////                createBoardMappingRed(x,y);
+//
+//
+//                radius = Math.sqrt(Math.pow(x-centerX,2) + Math.pow(y-centerY,2));
+////
+//                int cell2X = centerX + (int)(radius * Math.cos(Math.toRadians(40)));
+//                int cell2Y = centerY + (int)(radius * Math.sin(Math.toRadians(40)));
+//
+////                createView(cell2X,cell2Y);
+//                createBoardMappingBlue(cell2X,cell2Y);
+//
+//                int cell3X = centerX + (int)(radius * Math.cos(Math.toRadians(34)));
+//                int cell3Y = centerY - (int)(radius * Math.sin(Math.toRadians(34)));
+//
+//                createView(cell3X,cell3Y);
+//
+//                int cell4X = centerX - (int)(radius * Math.sin(Math.toRadians(14)));
+//                int cell4Y = centerY - (int)(radius * Math.cos(Math.toRadians(12)));
+//
+//                createView(cell4X,cell4Y);
+//
+//                int cell5X = centerX - (int)(radius * Math.cos(Math.toRadians(4)));
+//                int cell5Y = centerY - (int)(radius * Math.sin(Math.toRadians(4)));
+//
+//                createView(cell5X,cell5Y);
+
+//                int key = 1;
+//                        for(int i =0; i<3; i++) {
+//
+//                            int y1 = (int) (cell3Y - (cellWidth*i));
+//
+//                            for(int j = 0; j<6;j++){
+////
+//                                int x1 = (int) (cell3X + (cellWidth*j));
+//                                storeInHashMap(key++,x1,y1);
 ////
 ////                                createView(centerX + cell3X , centerY + cell3);
 //////
@@ -151,58 +166,139 @@ public class MainActivity extends AppCompatActivity {
 ////                                createView(816, 912);
 ////                                createView(912, 816);
 //
-                            }
-                        }
+//                            }
+//                        }
 
             }
         },2000);
 
     }
 
+    private HashMap<Integer, int[]> redMapping;
+    private HashMap<Integer, int[]> blueMapping;
+    private HashMap<Integer, int[]> yellowMapping;
+    private HashMap<Integer, int[]> greenMapping;
+
+
+    private void drawRedCoordinates( int startX, int startY){
+
+        redMapping = new HashMap<>();
+
+        int key = 1;
+
+        for(int i=0;i<3;i++){
+
+            int x = (int) (startX + (i*getCellWidth()));
+            for(int j = 0; j<6;j++){
+                int y = (int) (startY + (j*getCellWidth()));
+                createView(x,y);
+                System.out.println("Key:"+key + " X:"+ x + " Y:"+y);
+                redMapping.put(key++ , new int[]{x,y});
+            }
+        }
+
+        drawBlueCoordinates();
+    }
+
+    private double getRadiusFromCoordinates(int x, int y){
+
+        return Math.sqrt(Math.pow(x-originX,2) + Math.pow(y-originY,2));
+    }
+
+    private int[] calculateNextCoordinate(int x, int y){
+        double radius = getRadiusFromCoordinates(x,y);
+
+//        System.out.println(radius);
+//
+        double v = (Math.atan(Math.toDegrees(y/(float)x)) + 90);
+
+        int x1 = (int) (radius*(Math.cos(Math.toDegrees(v))));
+        int y1 = (int) (radius*(Math.sin(Math.toDegrees(v))));
+
+//        System.out.println(v);
+
+        int[] coordinates = new int[2];
+
+        coordinates[0] = x1;
+        coordinates[1] = y1;
+
+        return coordinates;
+    }
+
+    private void drawBlueCoordinates(){
+
+
+        for (Map.Entry<Integer,int[]> entry : redMapping.entrySet()){
+
+            int key = entry.getKey();
+            int[] location = entry.getValue();
+
+            int x = location[0];
+            int y = location[1];
+
+            int[] result = calculateNextCoordinate(x,y);
+            System.out.println("Key:"+key + " Blue X:"+ result[0] + " Blue Y:"+result[1]);
+            createView(result[0] + originX,result[1] + originY);
+        }
+    }
+
+    // 13percent of board size
+    private double getRadiusFromPercentage(int imageHeight) {
+        return (imageHeight * 13.94) / 100;
+    }
+
+    private double getCellWidth(){
+        return (getRadiusFromPercentage(boardHeight)*Math.cos(Math.toRadians(45)))/1.5;
+    }
+
+    private void createBoardMappingRed(int x, int y){
+
+        for(int i =0; i<3; i++) {
+
+            int x1 = (int) ((int)(x + (cellWidth * i)));
+
+            for(int j = 0; j<6;j++) {
+
+                int y1 = (int) ((int) (y + (cellWidth*j)));
+                createView(x1,y1);
+
+            }
+        }
+    }
+
+
+    private void createBoardMappingBlue(int x, int y){
+
+        createView(x,y);
+
+        int nextX = (int) (x + cellWidth); // not changed
+        int nextY = (int) (y - cellWidth);
+
+        createView(nextX,nextY);
+//
+
+        int p = (int) (cellWidth * Math.tan(Math.toRadians(20)));
+
+//        int nextZ = (int) (nextY + p);
+//        createView(nextX ,nextZ);
+
+        for(int i =0; i<3; i++) {
+
+            int y1 = (int) ((int)(y - (cellWidth * i)));
+
+            for(int j = 0; j<6;j++) {
+
+                int x1 = (int) ((int) (x + (cellWidth*j)));
+//                int y1 = y + p*j;
+
+                createView(x1,y1);
+
+            }
+        }
+    }
 
 
     int cell_2_X = 0,cell_2_Y = 0 ;
-
-    private void change(){
-        new Handler().postDelayed(
-                new Runnable() {
-                    @Override
-                    public void run() {
-
-                        double degrees = Double.parseDouble(degree.getText().toString());
-
-                        if(angle.getText().toString().equals("sin")){
-
-                            cell_2_X = (int) (baseX * Math.sin(Math.toRadians(degrees)));
-                            cell_2_Y = (int) ((centerY + perpendicular) * Math.sin(Math.toRadians(degrees)));
-
-                            System.out.println("Sin" + degrees);
-
-                        }else if (angle.getText().toString().equals("tan")){
-
-                            cell_2_X = (int) (baseX * Math.tan(Math.toRadians(degrees)));
-                            cell_2_Y = (int) ((centerY + perpendicular) * Math.tan(Math.toRadians(degrees)));
-
-                            System.out.println("tan" + degrees);
-
-
-                        }else if (angle.getText().toString().equals("cos")){
-                            cell_2_X = (int) (baseX * Math.cos(Math.toRadians(degrees)));
-                            cell_2_Y = (int) ((centerY + perpendicular) * Math.cos(Math.toRadians(degrees)));
-                            System.out.println("Cos" + degrees);
-
-                        }
-                        createView(cell_2_X, cell_2_Y);
-
-
-//                        findNextCoordinate(72,cell_2_X,cell_2_Y);
-//
-
-                    }
-                },1000
-        );
-
-    }
 
     private void storeInHashMap(int key, int x, int y){
 //
@@ -211,10 +307,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private View createView(int x, int y){
-
-        System.out.println("X:"+x);
-        System.out.println("Y:"+y);
-
 
         View view = new View(this);
         view.setBackgroundColor(Color.DKGRAY);
@@ -235,7 +327,57 @@ public class MainActivity extends AppCompatActivity {
 
       double sideBC = 2*sideAB*Math.toRadians(Math.cos(anglePerSide));
 
+    }
 
+    private void for4Player(){
+
+//        perpendicular = imageHeight * .1;
+//        base =  (2 * perpendicular)/Math.tan(Math.toRadians(45));
+//
+//        cellWidth = base/3 ;
+//
+//        baseX = (int) (centerX - base/2);
+//        baseY = (int) (centerY + perpendicular);
+//
+//        int x = (int) (baseX + cellWidth/2);
+//        int y = (int) (baseY + cellWidth/2);
+//
+//        createView(x,y);
+//        double radius = Math.sqrt(Math.pow(x-centerX,2) + Math.pow(y-centerY,2));
+//
+//        int cell3X = centerX + (int)(radius * Math.cos(Math.toRadians(30)));
+//        int cell3Y = centerY + (int)(radius * Math.sin(Math.toRadians(30)));
+//
+//        int key = 1;
+//        for(int i =0; i<3; i++) {
+//
+//            int y1 = (int) (cell3Y - (cellWidth*i));
+//
+//            for(int j = 0; j<6;j++){
+////
+//                int x1 = (int) (cell3X + (cellWidth*j));
+//                storeInHashMap(key++,x1,y1);
+////
+////                                createView(centerX + cell3X , centerY + cell3);
+//////
+////                                int cell4X = (int) (radius * Math.cos(Math.toRadians(60)));
+////                                int cell4Y = (int) (radius * Math.sin(Math.toRadians(60)));
+////
+////
+////                                createView(centerX + cell4X , centerY - cell4Y);
+////
+////
+////                                int cell5X = (int) (radius * Math.cos(Math.toRadians(30)));
+////                                int cell5Y = (int) (radius * Math.sin(Math.toRadians(30)));
+////
+////
+////                                createView(centerX - cell5X , centerY - cell5Y);
+//
+//
+//                                //createView(cell3X,cell3Y);
+////                                createView(816, 528);
+////                                createView(816, 912);
+////                                createView(912, 816);
 
     }
 
