@@ -111,45 +111,46 @@ public class MainActivity extends AppCompatActivity {
                 baseX = (int) (centerX - base/2);
                 baseY = (int) (centerY + perpendicular);
 
+                int x = (int) (baseX + cellWidth/2);
+                int y = (int) (baseY + cellWidth/2);
+
+                createView(x,y);
+                double radius = Math.sqrt(Math.pow(x-centerX,2) + Math.pow(y-centerY,2));
+
+                int cell3X = centerX + (int)(radius * Math.cos(Math.toRadians(30)));
+                int cell3Y = centerY + (int)(radius * Math.sin(Math.toRadians(30)));
+
                 int key = 1;
-                        for(int i =0; i<1; i++) {
+                        for(int i =0; i<3; i++) {
 
-                            int x = (int) (baseX + (cellWidth*i) + cellWidth/2);
+                            int y1 = (int) (cell3Y - (cellWidth*i));
 
-                            for(int j = 0; j<1;j++){
-
-                                int y = (int) (baseY + (cellWidth*j) + cellWidth/2);
-                                storeInHashMap(key++,x,y);
-//                                findNextCoordinate(72,x,y);
-
-                                double radius = Math.sqrt(Math.pow(x-centerX,2) + Math.pow(y-centerY,2));
-
-                                System.out.println("Radius" + radius);
-
-                                int cell3X = (int) (radius * Math.cos(Math.toRadians(30)));
-                                int cell3Y = (int) (radius * Math.sin(Math.toRadians(30)));
-
-                                createView(centerX + cell3X , centerY + cell3Y);
-
-                                int cell4X = (int) (radius * Math.cos(Math.toRadians(60)));
-                                int cell4Y = (int) (radius * Math.sin(Math.toRadians(60)));
-
-
-                                createView(centerX + cell4X , centerY - cell4Y);
-
-
-                                int cell5X = (int) (radius * Math.cos(Math.toRadians(30)));
-                                int cell5Y = (int) (radius * Math.sin(Math.toRadians(30)));
-
-
-                                createView(centerX - cell5X , centerY - cell5Y);
-
-
-                                //createView(cell3X,cell3Y);
-//                                createView(816, 528);
-//                                createView(816, 912);
-//                                createView(912, 816);
-
+                            for(int j = 0; j<6;j++){
+//
+                                int x1 = (int) (cell3X + (cellWidth*j));
+                                storeInHashMap(key++,x1,y1);
+////
+////                                createView(centerX + cell3X , centerY + cell3);
+//////
+////                                int cell4X = (int) (radius * Math.cos(Math.toRadians(60)));
+////                                int cell4Y = (int) (radius * Math.sin(Math.toRadians(60)));
+////
+////
+////                                createView(centerX + cell4X , centerY - cell4Y);
+////
+////
+////                                int cell5X = (int) (radius * Math.cos(Math.toRadians(30)));
+////                                int cell5Y = (int) (radius * Math.sin(Math.toRadians(30)));
+////
+////
+////                                createView(centerX - cell5X , centerY - cell5Y);
+//
+//
+//                                //createView(cell3X,cell3Y);
+////                                createView(816, 528);
+////                                createView(816, 912);
+////                                createView(912, 816);
+//
                             }
                         }
 
@@ -204,8 +205,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void storeInHashMap(int key, int x, int y){
-
-        map.put(key,new int[]{x,y});
+//
+//        map.put(key,new int[]{x,y});
         createView(x,y);
     }
 
