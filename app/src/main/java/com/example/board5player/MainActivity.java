@@ -98,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
                 System.out.println(centerX);
                 System.out.println(centerY);
 
+                createView(centerX,centerY);
+
 //                perpendicular = imageHeight * (12.97/100);
 //                base = (2 * perpendicular ) / Math.tan(Math.toRadians(54));
 
@@ -124,10 +126,29 @@ public class MainActivity extends AppCompatActivity {
 
                                 System.out.println("Radius" + radius);
 
-                                int cell3X = (int) (radius * Math.sin(Math.toRadians(30)));
+                                int cell3X = (int) (radius * Math.cos(Math.toRadians(30)));
                                 int cell3Y = (int) (radius * Math.sin(Math.toRadians(30)));
 
-                                createView(x + cell3X, y + cell3Y);
+                                createView(centerX + cell3X , centerY + cell3Y);
+
+                                int cell4X = (int) (radius * Math.cos(Math.toRadians(60)));
+                                int cell4Y = (int) (radius * Math.sin(Math.toRadians(60)));
+
+
+                                createView(centerX + cell4X , centerY - cell4Y);
+
+
+                                int cell5X = (int) (radius * Math.cos(Math.toRadians(30)));
+                                int cell5Y = (int) (radius * Math.sin(Math.toRadians(30)));
+
+
+                                createView(centerX - cell5X , centerY - cell5Y);
+
+
+                                //createView(cell3X,cell3Y);
+//                                createView(816, 528);
+//                                createView(816, 912);
+//                                createView(912, 816);
 
                             }
                         }
@@ -136,6 +157,8 @@ public class MainActivity extends AppCompatActivity {
         },2000);
 
     }
+
+
 
     int cell_2_X = 0,cell_2_Y = 0 ;
 
