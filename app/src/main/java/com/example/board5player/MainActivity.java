@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         location = new int[2];
         imageView.getLocationInWindow(location);
 
-        base();
+        base1();
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,9 +87,6 @@ public class MainActivity extends AppCompatActivity {
                 centerX =  boardLeft + imageWidth/2;
                 centerY =  boardTop + imageHeight/2;
 
-                imageView.setPivotX(centerX);
-                imageView.setPivotY(centerY);
-
                 createView(centerX,centerY);
 
                 perpendicular = imageHeight * .1;
@@ -99,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
 
                 baseX = (int) (centerX - base/2);
                 baseY = (int) (centerY + perpendicular);
+
+                createView(baseX,baseY);
 
                 int x = (int) (baseX + cellWidth/2);
                 int y = (int) (baseY + cellWidth/2);
@@ -138,6 +137,8 @@ public class MainActivity extends AppCompatActivity {
         },2000);
     }
 
+    int imageHeight = 0 ;
+    int imageWidth = 0;
     //5 Player
     private void base1(){
 
@@ -151,8 +152,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                int imageHeight = imageView.getHeight();
-                int imageWidth = imageView.getWidth();
+                imageHeight = imageView.getHeight() - 10;
+                imageWidth = imageView.getWidth();
 
                 int boardTop = location[1];
                 int boardLeft = location[0];
@@ -160,9 +161,6 @@ public class MainActivity extends AppCompatActivity {
 
                 centerX =  boardLeft + imageWidth/2;
                 centerY =  boardTop + imageHeight/2;
-
-                imageView.setPivotX(centerX);
-                imageView.setPivotY(centerY);
 
                 createView(centerX,centerY);
 
@@ -176,6 +174,9 @@ public class MainActivity extends AppCompatActivity {
 
                 baseX = (int) (centerX - base/2);
                 baseY = (int) (centerY + perpendicular);
+
+                createView(baseX,baseY);
+                drawRedBase(baseX,baseY);
 
                 int x = (int) (baseX + cellWidth/2);
                 int y = (int) (baseY + cellWidth/2);
@@ -239,6 +240,55 @@ https://math.stackexchange.com/questions/270194/how-to-find-the-vertices-angle-a
         return new int[]{centerX+ x1,centerY + y1};
     }
 
+
+/*
+width - 56 , 84,53,131
+height - 77 , 116,158,99
+
+ */
+    private void drawRedBase(int baseX, int baseY){
+
+        int firstX = (int) (baseX - imageWidth*.0722);
+        int firstY = (int) (baseY + imageHeight*.111);
+        int secondX = (int) (baseX - imageWidth*.122);
+        int secondY = (int) (baseY + imageHeight*.1611);
+        int thirdX = (int) (baseX - imageWidth*.0680);
+        int thirdY = (int) (baseY + imageHeight*.2194);
+        int fourthX = (int) (baseX - imageWidth*.181);
+        int fourthY = (int) (baseY + imageHeight*.1375);
+
+        createView(firstX,firstY);
+        createView(secondX,secondY);
+        createView(thirdX,thirdY);
+        createView(fourthX,fourthY);
+
+
+        drawBlueBase(firstX,firstY);
+        drawBlueBase(secondX,secondY);
+        drawBlueBase(thirdX,thirdY);
+        drawBlueBase(fourthX,fourthY);
+
+    }
+    private void drawBlueBase(int x, int y){
+        int[] location = performRotation5P(x,y);
+        createView(location[0],location[1]);
+        drawOrangeBase(location[0],location[1]);
+    }
+    private void drawOrangeBase(int x, int y){
+        int[] location = performRotation5P(x,y);
+        createView(location[0],location[1]);
+        drawYellowBase(location[0],location[1]);
+    }
+    private void drawYellowBase(int x, int y){
+        int[] location = performRotation5P(x,y);
+        createView(location[0],location[1]);
+        drawGreenBase(location[0],location[1]);
+    }
+    private void drawGreenBase(int x, int y){
+        int[] location = performRotation5P(x,y);
+        createView(location[0],location[1]);
+    }
+
     private void storeInHashMap(HashMap<Integer,int[]> map,int key, int x, int y){
 //
         map.put(key,new int[]{x,y});
@@ -247,10 +297,8 @@ https://math.stackexchange.com/questions/270194/how-to-find-the-vertices-angle-a
 
     private View createView(int x, int y){
 
-        System.out.println("X:"+x);
-        System.out.println("Y:"+y);
 
-
+        System.out.println("X: " +x + " Y: " + y);
         View view = new View(this);
         view.setBackgroundColor(Color.DKGRAY);
         view.setLayoutParams(layoutParams);
