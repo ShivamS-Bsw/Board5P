@@ -29,13 +29,36 @@
             android:layout_height="0dp">
         </ImageView>
 
+<!--        <View-->
+<!--            android:id="@+id/view"-->
+<!--            android:layout_width="1dp"-->
+<!--            android:layout_height="1dp"/>-->
 
+<!--        <ImageView-->
+<!--            android:id="@+id/token"-->
+<!--            android:src="@drawable/blue_token_4_icon"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"/>-->
     </androidx.constraintlayout.widget.ConstraintLayout>
     <Button
-        android:id="@+id/button"
+        android:id="@+id/button4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="Change Board"
+        android:text="4 Board"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/button5"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="5 Board"
+        app:layout_constraintStart_toEndOf="@id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <Button
+        android:id="@+id/button6"
+        app:layout_constraintStart_toEndOf="@id/button5"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="6 Board"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
