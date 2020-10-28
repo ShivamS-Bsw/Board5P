@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,13 +25,14 @@ public class MainActivity extends AppCompatActivity {
     int left;
     int[] location;
     ConstraintLayout.LayoutParams layoutParams;
-    private HashMap<Integer,int[]> redMap,blueMap,greenMap,yellowMap,orangeMap;
+    private HashMap<Integer,int[]> redMap,blueMap,greenMap,yellowMap,orangeMap,purpleMap;
     boolean called = false;
     private double base;
     private double perpendicular;
     private int centerY;
     private int centerX;
-    private Button button;
+    private Button button4,button5,button6;
+    private ImageView token;
     int boardValue = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +40,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         imageView = findViewById(R.id.image);
-        button = findViewById(R.id.button);
+        button4 = findViewById(R.id.button4);
+        button5 = findViewById(R.id.button5);
+        button6 = findViewById(R.id.button6);
 
 
         constraintLayout = findViewById(R.id.constraint_layout);
@@ -50,15 +54,27 @@ public class MainActivity extends AppCompatActivity {
         location = new int[2];
         imageView.getLocationInWindow(location);
 
-        base1();
-        button.setOnClickListener(new View.OnClickListener() {
+        base();
+        button4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(boardValue == 0){
-                    base1();
-                }else if(boardValue == 1){
+                if(boardValue != 0)
                     base();
-                }
+            }
+        });
+        button5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(boardValue != 1)
+                    base1();
+            }
+        });
+        button6.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                if(boardValue != 2)
+                    base2();
             }
         });
     }
@@ -93,6 +109,8 @@ public class MainActivity extends AppCompatActivity {
                 base =  (2 * perpendicular)/Math.tan(Math.toRadians(45));
 
                 cellWidth = base/3 ;
+
+
 
                 baseX = (int) (centerX - base/2);
                 baseY = (int) (centerY + perpendicular);
@@ -134,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             }
-        },2000);
+        },2000); //  delay because it takes some time to render the image and get the height and width
     }
 
     int imageHeight = 0 ;
@@ -152,7 +170,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
 
-                imageHeight = imageView.getHeight() - 10;
+                imageHeight = imageView.getHeight() - 13;
                 imageWidth = imageView.getWidth();
 
                 int boardTop = location[1];
@@ -171,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
 //                base =  (2 * perpendicular)/Math.tan(Math.toRadians(45));
 
                 cellWidth = base/3 ;
+
 
                 baseX = (int) (centerX - base/2);
                 baseY = (int) (centerY + perpendicular);
@@ -202,6 +221,7 @@ public class MainActivity extends AppCompatActivity {
                                 int [] location2 = performRotation5P(x1,y1);
                                 storeInHashMap(blueMap,key,location2[0],location2[1]);
 
+
                                 int [] location3 = performRotation5P(location2[0],location2[1]);
                                 storeInHashMap(orangeMap,key,location3[0],location3[1]);
 
@@ -214,6 +234,8 @@ public class MainActivity extends AppCompatActivity {
                                 storeInHashMap(yellowMap,key,location5[0],location5[1]);
 
                                 key++;
+
+
                             }
                         }
 
@@ -222,9 +244,101 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //6 Player
+    private void base2(){
+
+        boardValue = 2;
+        constraintLayout.removeAllViews();
+        imageView.setBackgroundResource(R.drawable.game_board_6p);
+        constraintLayout.addView(imageView);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+                imageHeight = imageView.getHeight();
+                imageWidth = imageView.getWidth();
+
+                int boardTop = location[1];
+                int boardLeft = location[0];
+
+                centerX =  boardLeft + imageWidth/2;
+                centerY =  boardTop + imageHeight/2;
+
+                createView(centerX,centerY);
+
+                perpendicular = imageHeight * (14.55/100);
+                base = (2 * perpendicular ) / Math.tan(Math.toRadians(60));
+
+                cellWidth = base/3 ;
+
+                // First cell
+                baseX = (int) (centerX - perpendicular);
+                baseY = (int) (centerY - base/2 );
+
+                int x = (int) (baseX - cellWidth/2);
+                int y = (int) (baseY + cellWidth/2);
+
+                redMap = new HashMap<>();
+                blueMap = new HashMap<>();
+                greenMap = new HashMap<>();
+                yellowMap = new HashMap<>();
+                orangeMap = new HashMap<>();
+                purpleMap = new HashMap<>();
+
+                int key = 1;
+                for (int i=0;i<3;i++){
+
+                    int y1 = (int) (y + (i*cellWidth));
+
+                    for(int j=0;j<6;j++){
+
+                        int x1 = (int) (x - (j*cellWidth));
+                        storeInHashMap(purpleMap,key,x1,y1);
+
+                        int[] location2 = performRotation6P(x1,y1);
+                        storeInHashMap(yellowMap,key,location2[0],location2[1]);
+
+                        int[] location3 = performRotation6P(location2[0],location2[1]);
+                        storeInHashMap(yellowMap,key,location3[0],location3[1]);
+
+                        int[] location4 = performRotation6P(location3[0],location3[1]);
+                        storeInHashMap(yellowMap,key,location4[0],location4[1]);
+
+                        int[] location5 = performRotation6P(location4[0],location4[1]);
+                        storeInHashMap(yellowMap,key,location5[0],location5[1]);
+
+                        int[] location6 = performRotation6P(location5[0],location5[1]);
+                        storeInHashMap(yellowMap,key,location6[0],location6[1]);
+
+                        key++;
+
+                    }
+                }
+
+            }
+        },2000);
+
+    }
+
+    private void drawBase6P(){
+
+        for(Map.Entry<Integer,int[]> map: purpleMap.entrySet()){
+
+            if(map.getKey()>6 && map.getKey()<13){
+
+                int[] location = performRotation4P(map.getValue()[0],map.getValue()[1]);
+
+                createView(location[0], (int) (location[1]+cellWidth/2));
+
+            }
+        }
+    }
+
 /*
 https://math.stackexchange.com/questions/270194/how-to-find-the-vertices-angle-after-rotation
  */
+
     private int[] performRotation4P(int x, int y){
 
         int x1 = (int) (((x - centerX) * Math.cos(Math.toRadians(-90))) - ((y-centerY)*Math.sin(Math.toRadians(-90))));
@@ -236,6 +350,13 @@ https://math.stackexchange.com/questions/270194/how-to-find-the-vertices-angle-a
 
         int x1 = (int) (((x - centerX) * Math.cos(Math.toRadians(-72))) - ((y-centerY)*Math.sin(Math.toRadians(-72))));
         int y1 = (int) (((x- centerX )* Math.sin(Math.toRadians(-72))) + ((y - centerY)*Math.cos(Math.toRadians(-72))));
+
+        return new int[]{centerX+ x1,centerY + y1};
+    }
+    private int[] performRotation6P(int x, int y){
+
+        int x1 = (int) (((x - centerX) * Math.cos(Math.toRadians(-60))) - ((y-centerY)*Math.sin(Math.toRadians(-60))));
+        int y1 = (int) (((x- centerX )* Math.sin(Math.toRadians(-60))) + ((y - centerY)*Math.cos(Math.toRadians(-60))));
 
         return new int[]{centerX+ x1,centerY + y1};
     }
